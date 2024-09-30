@@ -1,0 +1,18 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+
+#migrations
+migrations
+env
+
+#.env file
+.env 
+
+db.sqlite3
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir

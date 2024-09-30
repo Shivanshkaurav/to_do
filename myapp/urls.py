@@ -8,4 +8,5 @@ urlpatterns = [
     path('list-task/', ListTasksView.as_view(), name = 'list-task'),
     path('create-task/', CreateTaskView.as_view(), name = 'create-task'),
     path('update-task/<int:pk>/', UpdateTaskView.as_view(), name = 'update-task'),
+    path('hello/', sendMail, name = 'hello'),
 ]
