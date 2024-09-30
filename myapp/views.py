@@ -10,6 +10,9 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from django.conf import settings
+from django.http import HttpResponse
+from .tasks import hello_mail
 
 class TodoView(ListAPIView):
     serializer_class = TodoSerializer
@@ -74,4 +77,10 @@ class UpdateTaskView(APIView):
             serializer.validated_data['complete_date'] = completed_date
         
         serializer.save() 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)  
+    
+def sendMail(request):
+    email = 'shivanshkaurav05@gmail.com'
+    hello_mail.delay(email)
+    
+    return HttpResponse("Email sent!")
