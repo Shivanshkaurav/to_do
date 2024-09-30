@@ -13,7 +13,7 @@ from rest_framework import status
 from django.conf import settings
 from django.http import HttpResponse
 from .tasks import hello_mail
-
+from .throttles import AnonRateThrottles, SustainedRateThrottle
 class TodoView(ListAPIView):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()  
@@ -25,6 +25,7 @@ class RegisterUserView(CreateAPIView):
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
     authentication_classes = [TokenAuthentication]
+    throttle_classes = [AnonRateThrottles, SustainedRateThrottle]
     
     def post(self, request):
         user = authenticate(email = request.data['email'], password = request.data.get('password'))

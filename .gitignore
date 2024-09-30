@@ -10,4 +10,9 @@ migrations
 env
 
 #.env file
-.env
+.env 
+
+db.sqlite3
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir

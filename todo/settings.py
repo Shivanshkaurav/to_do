@@ -54,6 +54,16 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'myapp.throttles.AnonRateThrottles',
+        'myapp.throttles.SustainedRateThrottle',
+        'myapp.throttles.AdminLoginThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anna': '3/day',
+        'sustained': '3/day',
+        'admin_login': '3/min'
+    }
 }
 
 
@@ -65,6 +75,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "myapp.middleware.AdminLoginThrottleMiddleware",
 ]
 
 ROOT_URLCONF = "todo.urls"
