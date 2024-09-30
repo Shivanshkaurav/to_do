@@ -82,6 +82,7 @@ class UpdateTaskView(APIView):
     
 def sendMail(request):
     email = 'shivanshkaurav05@gmail.com'
-    hello_mail.delay(email)
+    id = hello_mail.delay(email)
+    print(id)
     
     return HttpResponse("Email sent!")

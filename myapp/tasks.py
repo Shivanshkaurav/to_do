@@ -21,11 +21,12 @@ def send_mail_task():
     
 @shared_task
 def hello_mail(email):
-    send_mail(
-        'Hello', 
-        'Hello World', 
-        settings.EMAIL_HOST_USER, 
-        [email], 
-        fail_silently=False,
-        )
+    print("enter")
+    # send_mail(
+    #     'Hello', 
+    #     'Hello World', 
+    #     settings.EMAIL_HOST_USER, 
+    #     [email], 
+    #     fail_silently=True,
+    #     )
     return "Message Sent!"
