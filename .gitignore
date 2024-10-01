@@ -10,7 +10,7 @@ migrations
 env
 
 #.env file
-.env 
+.env
 
 celerybeat-schedule.bak
 celerybeat-schedule.dat
