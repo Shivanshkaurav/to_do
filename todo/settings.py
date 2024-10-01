@@ -54,15 +54,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_THROTTLE_CLASSES': [
         'myapp.throttles.AnonRateThrottles',
         'myapp.throttles.SustainedRateThrottle',
         'myapp.throttles.AdminLoginThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anna': '3/day',
-        'sustained': '3/day',
-        'admin_login': '3/min'
+        'anna': '300000/day',
+        'sustained': '300000/day',
+        'admin_login': '300000/min'
     }
 }
 
@@ -160,12 +163,12 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://localhost:6380'
+CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_IMPORTS = ('myapp.tasks',)
 
 from celery.schedules import crontab
@@ -174,6 +177,6 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'send-remainder-emails':{
         'task': 'myapp.tasks.send_mail_task',
-        'schedule': crontab(hour=16, minute=2)
+        'schedule': crontab(hour=15, minute=43)
     },
 }
