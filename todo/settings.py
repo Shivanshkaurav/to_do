@@ -177,6 +177,6 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'send-remainder-emails':{
         'task': 'myapp.tasks.send_mail_task',
-        'schedule': crontab(hour=15, minute=43)
+        'schedule': crontab(hour=17, minute=8)
     },
 }
