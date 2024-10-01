@@ -11,7 +11,7 @@ env
 
 #.env file
 .env
-
+.gitignore
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
