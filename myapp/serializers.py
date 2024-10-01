@@ -14,9 +14,8 @@ class TodoSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         todays_date = date.today()
         validated_data['due_date'] = todays_date + timedelta(days=4)
-        data = super(TodoSerializer, self).create(validated_data)
+        data = Todo.objects.create(**validated_data)
         return data
-    
 
 class UpdateSerializer(serializers.ModelSerializer):
     class Meta:

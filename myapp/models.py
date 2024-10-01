@@ -16,7 +16,7 @@ class Todo(models.Model):
         verbose_name_plural = "Todo"
     def __str__(self):
         return self.task  
-    
+
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=254, unique=True,null=True,blank=True)
     full_name = models.CharField(max_length=100)

@@ -10,10 +10,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from django.conf import settings
-from django.http import HttpResponse
-from .tasks import hello_mail
 from .throttles import AnonRateThrottles, SustainedRateThrottle
+
 class TodoView(ListAPIView):
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()  
@@ -24,6 +22,7 @@ class RegisterUserView(CreateAPIView):
     
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
+    permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
     throttle_classes = [AnonRateThrottles, SustainedRateThrottle]
     
@@ -35,6 +34,7 @@ class LoginUserView(APIView):
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)   
 
 class ListTasksView(APIView):
+    permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
     serializer_class = TodoSerializer
     
@@ -47,17 +47,18 @@ class ListTasksView(APIView):
         data = serializer.data
         return Response({"data": data}, status=status.HTTP_200_OK)   
 
-class CreateTaskView(CreateAPIView):  
-    serializer_class = TodoSerializer
+class CreateTaskView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+    serializer_class = TodoSerializer
     def post(self, request):
         user = request.user
-        if type(user.id) != (int):
+        if not user.is_authenticated:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = TodoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=user)
-            return Response({"success": "Task Created Successfully!"}, status=status.HTTP_201_CREATED)
+            to_do_item = serializer.save(user=user)
+            return Response({"success": "Task Created Successfully!", "id": to_do_item.id}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
@@ -67,9 +68,6 @@ class UpdateTaskView(APIView):
     serializer_class = UpdateSerializer
     
     def patch(self, request, pk):
-        import pdb;pdb.set_trace()
-        
-        # import pdb;pdb.set_trace()
         to_do = get_object_or_404(Todo, id=pk)
         serializer = UpdateSerializer(to_do, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -78,11 +76,4 @@ class UpdateTaskView(APIView):
             serializer.validated_data['complete_date'] = completed_date
         
         serializer.save() 
-        return Response(serializer.data, status=status.HTTP_200_OK)  
-    
-def sendMail(request):
-    email = 'shivanshkaurav05@gmail.com'
-    id = hello_mail.delay(email)
-    print(id)
-    
-    return HttpResponse("Email sent!")
+        return Response(serializer.data, status=status.HTTP_200_OK)
