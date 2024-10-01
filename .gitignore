@@ -12,7 +12,6 @@ env
 #.env file
 .env 
 
-db.sqlite3
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
