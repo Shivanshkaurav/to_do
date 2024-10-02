@@ -5,8 +5,7 @@ from .serializers import *
 from rest_framework.views import APIView
 from .models import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -23,19 +22,17 @@ class RegisterUserView(CreateAPIView):
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
     permission_classes = [AllowAny]
-    authentication_classes = [TokenAuthentication]
     throttle_classes = [AnonRateThrottles, SustainedRateThrottle]
     
     def post(self, request):
         user = authenticate(email = request.data['email'], password = request.data.get('password'))
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key , "Success": "Successfully logged in"}, status=status.HTTP_200_OK)
+            return Response({"Success": "Successfully logged in"}, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)   
 
 class ListTasksView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     serializer_class = TodoSerializer
     
     def get(self, request):
@@ -49,7 +46,7 @@ class ListTasksView(APIView):
 
 class CreateTaskView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     serializer_class = TodoSerializer
     def post(self, request):
         user = request.user
@@ -63,8 +60,8 @@ class CreateTaskView(CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 class UpdateTaskView(APIView):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     serializer_class = UpdateSerializer
     
     def patch(self, request, pk):

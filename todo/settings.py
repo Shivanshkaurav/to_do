@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     
     "myapp.apps.MyappConfig",
     "rest_framework",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "django_celery_beat",
     "django_celery_results",
 ]
@@ -52,7 +52,7 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -177,6 +177,6 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'send-remainder-emails':{
         'task': 'myapp.tasks.send_mail_task',
-        'schedule': crontab(hour=17, minute=8)
+        'schedule': crontab(hour=13, minute=33)
     },
 }
